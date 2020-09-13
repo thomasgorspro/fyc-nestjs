@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Tea } from './tea.interface';
 import Data from '../data';
 
@@ -19,14 +19,23 @@ export class TeaService {
   }
 
   findById(id: string): Tea {
-    return this.teas.find((value: Tea) => value.id === id);
+    return this.returnTeaIfExist(id);
   }
 
   remove(id: string): void {
-    this.teas.splice(this.teas.indexOf(this.teas.find((value: Tea) => value.id === id)), 1);
+    const tea = this.returnTeaIfExist(id);
+    this.teas.splice(this.teas.indexOf(tea), 1);
   }
 
   update(id: string, updatedTea: Tea): void {
     this.teas.splice(this.teas.indexOf(this.teas.find((value: Tea) => value.id === id)), 1, updatedTea);
+  }
+
+  returnTeaIfExist(id: string): Tea {
+    const tea = this.teas.find((value: Tea) => value.id === id);
+    if (!tea) {
+      throw new NotFoundException();
+    }
+    return tea;
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query, ValidationPipe } from '@nestjs/common';
 import { TeaService } from './tea.service';
 import { Tea } from './tea.interface';
 import { CreateTeaDto } from './dto/create-tea.dto';
@@ -14,7 +14,7 @@ export class TeaController {
   }
 
   @Post()
-  async create(@Body() createTeaDto: CreateTeaDto): Promise<void> {
+  async create(@Body(ValidationPipe) createTeaDto: CreateTeaDto): Promise<void> {
     this.teaService.create(createTeaDto);
   }
 
